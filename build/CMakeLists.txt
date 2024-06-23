@@ -9,7 +9,7 @@ get_filename_component(PROJECT_TOP_DIR ${CMAKE_SOURCE_DIR} DIRECTORY)
 
 #设置inlucde位置路径变量
 set(PROJECT_CINCLUDE ${PROJECT_TOP_DIR}/include)
-
+set(PROJECT_ThridParty ${PROJECT_TOP_DIR}/ThridParty)
 
 #定义编译生成输出结果
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
@@ -20,3 +20,4 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 #将几个小项目包括进去
 add_subdirectory(${PROJECT_TOP_DIR}/src/basicFun basicFun.out)
 add_subdirectory(${PROJECT_TOP_DIR}/src/exctueMain exctueMain.out)
+add_subdirectory(${PROJECT_TOP_DIR}/src/PicJsonTrans PicJsonTrans.out)

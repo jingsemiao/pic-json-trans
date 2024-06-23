@@ -10,3 +10,4 @@ exctueMain.cpp
 
 add_executable(exctueMain  ${File_Source})
 target_link_libraries(exctueMain BasicFun)
+target_link_libraries(exctueMain PicJsonTrans)
