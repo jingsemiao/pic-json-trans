@@ -11,3 +11,6 @@ exctueMain.cpp
 add_executable(exctueMain  ${File_Source})
 target_link_libraries(exctueMain BasicFun)
 target_link_libraries(exctueMain PicJsonTrans)
+
+target_link_directories(exctueMain PRIVATE ${PROJECT_OUTPUT_DIR})
+target_link_libraries(exctueMain opencv_world4100.lib) # 链接库
