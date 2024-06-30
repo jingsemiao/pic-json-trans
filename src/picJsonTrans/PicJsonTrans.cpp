@@ -2,6 +2,7 @@
 #include "PicJsonTrans.h"
 
 #include "nlohmann-json/json.hpp"
+#include "opencv/opencv.hpp"
 
 #include <iostream>
 #include <string>
@@ -32,10 +33,20 @@ namespace nsPicJsonTrans {
         std::cout << j.dump(4) << std::endl;  // 4是缩进级别，用于格式化输出
     }
 
-    void FunTest() {
+    void TestCv()
+    {
+        cv::Mat mat1;
+        if (mat1.empty()) {
+
+        }
         int kkk = 456;
+    }
+
+    void FunTest() {
         std::cout << "Is nsPicJsonTrans" << std::endl;
         TestJson();
+        TestCv();
+        int kkk = 456;
     }
 
 }
