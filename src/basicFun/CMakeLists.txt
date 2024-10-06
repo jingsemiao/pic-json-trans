@@ -7,7 +7,7 @@ include_directories(${PROJECT_CINCLUDE})
 
 file(GLOB File_Source
 	basicFun.cpp
-    ${PROJECT_CINCLUDE}/*.h
+    ${PROJECT_CINCLUDE}/basicFunApi.h
 )
 
 project(BasicFun)

@@ -5,6 +5,8 @@
 #include "nlohmann-json/json.hpp"
 #include <windows.h>
 
+#include <iostream>
+#include <filesystem>
 
 // 遍历彩色图像并将像素存入vector  
 void storePixelsInVector(const cv::Mat& img, std::vector<cv::Vec3b>& pixels) {
@@ -84,7 +86,38 @@ void TestMat(std::string strFilePath,std::string strResNamePrefix)
 	cv::imwrite(strResCopy, restoredImg);
 }
 
+
+void recursiveDirectoryTraversal(const std::filesystem::path& path) {
+	try {
+		for (const auto& entry : std::filesystem::recursive_directory_iterator(path)) {
+			if (std::filesystem::is_directory(entry.status())) {
+				std::cout << "Directory: " << entry.path() << std::endl;
+			}
+			else if (std::filesystem::is_regular_file(entry.status())) {
+				// 获取纯文件名
+				
+				std::string filename = entry.path().filename().string();
+				// 获取相对路径
+				std::string relative_path = std::filesystem::relative(entry.path(), path).string();
+				std::cout << "relative_path: " << relative_path << ",FileName : " << filename << std::endl;
+			}
+			else {
+				std::cout << "Other: " << entry.path() << std::endl;
+			}
+		}
+	}
+	catch (const std::filesystem::filesystem_error& e) {
+		std::cerr << "Filesystem error: " << e.what() << std::endl;
+	}
+	catch (const std::exception& e) {
+		std::cerr << "Exception: " << e.what() << std::endl;
+	}
+}
+
 int main() { 
+
+	
+
 	char buffer[MAX_PATH];
 	if (GetModuleFileNameA(NULL, buffer, MAX_PATH) != 0) {
 		std::string strbuffer(buffer);
@@ -93,6 +126,13 @@ int main() {
 	else {
 		std::cout << "无法获取文件路径" << std::endl;
 	}
+	
+
+	std::string strPathTest = "C:\\test";
+	nsCommonFun::StDirFileInfo* ptrInfo = nsCommonFun::GetDirFileRecursively(strPathTest);
+	delete ptrInfo;
+
+	recursiveDirectoryTraversal(strPathTest);
 
 	// cv::cvtColor(input, output, cv::COLOR_BGR2GRAY);
 

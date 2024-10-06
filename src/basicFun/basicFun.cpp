@@ -1,10 +1,41 @@
 #include "basicFunApi.h"
 
 namespace nsCommonFun {
+
+    StDirFileInfo::StDirFileInfo()
+    {
+    }
+
+    StDirFileInfo::StDirFileInfo(StDirFileInfo* parent)
+    {
+        if (parent) {
+            parent->vecSonDir.push_back(this);
+        }
+    }
+
+    StDirFileInfo::~StDirFileInfo()
+    {
+        // 删除所有子节点
+        std::cout << "\n\n" << std::endl;
+        std::cout << "~StDirFileInfo() dirPath = " << dirPath  << "   ,relPath =  " << dirRelPath << std::endl;
+        for (std::string strFile : vecDirFile) {
+            std::cout << "FileName = " << strFile << std::endl;
+        }
+
+        for (StDirFileInfo* child : vecSonDir) {
+            delete child;
+        }
+        vecSonDir.clear();
+    }
+
 	void printNumber(int a) {
 		std::cout << "number == " << a << std::endl;
 	}
 
+
+    bool DirectoryPathExists(const std::filesystem::path& path) {
+        return std::filesystem::exists(path) && std::filesystem::is_directory(path);
+    }
 
     bool FileExist(const std::string& filePath) {
         std::fstream inFile(filePath);
@@ -24,6 +55,48 @@ namespace nsCommonFun {
         }
         int kkk = 456;
         return true;
+    }
+
+    StDirFileInfo* TraverseDirectory(const std::filesystem::path& topPath,const std::filesystem::path curPath, StDirFileInfo* parentInfo)
+    {
+        if (DirectoryPathExists(curPath) == false) {
+            return nullptr;
+        }
+        StDirFileInfo* ptrRes = new StDirFileInfo();
+        if (parentInfo) {
+            parentInfo->vecSonDir.push_back(ptrRes);
+        }
+
+        ptrRes->dirPath = curPath.string();
+        std::string relative_path = std::filesystem::relative(curPath, topPath).string();
+        ptrRes->dirRelPath = relative_path;
+
+        std::vector<std::filesystem::path> vecSonDir;
+        for (const auto& entry : std::filesystem::directory_iterator(curPath)) {
+            if (std::filesystem::is_directory(entry.status())) {
+                vecSonDir.push_back(entry.path());
+            }
+            else if (std::filesystem::is_regular_file(entry.status())) {
+                // 获取纯文件名
+                std::string filename = entry.path().filename().string();
+                ptrRes->vecDirFile.push_back(filename);
+            }
+        }
+
+        for (std::filesystem::path sonPath : vecSonDir) {
+            TraverseDirectory(topPath, sonPath, ptrRes);
+        }
+
+        return ptrRes;
+    }
+
+    StDirFileInfo* GetDirFileRecursively(const std::string& filePath)
+    {
+        if (DirectoryPathExists(filePath) == false) {
+            return nullptr;
+        }
+        StDirFileInfo* ptrRes = TraverseDirectory(filePath, filePath,nullptr);
+        return ptrRes;
     }
 
     std::wstring UTF8toUnicode(const std::string& s)
