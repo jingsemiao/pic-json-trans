@@ -11,6 +11,7 @@ include_directories(${PROJECT_CINCLUDE})
 include_directories(${PROJECT_ThridParty})
 include_directories(${PROJECT_ThridParty}/nlohmann-json)
 include_directories(${PROJECT_OpenCv_Dir})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 set(CMAKE_CXX_STANDARD 17)
 
