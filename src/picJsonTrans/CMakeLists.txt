@@ -4,14 +4,24 @@ add_definitions(-DPICJSONTRANS_EXPORT)
 project(PicJsonTrans)
 
 
-#set(PROJECT_ThridParty ${PROJECT_TOP_DIR}/ThridParty)
+# 假设当前目录是包含CMakeLists.txt的目录  
+# 获取当前目录的父目录  
+#set CUR_DIR=%~dp0
+# 获取当前源码目录的父目录
+get_filename_component(MyParent_DIR ${CMAKE_CURRENT_SOURCE_DIR} DIRECTORY)
 
+#CMAKE_CURRENT_SOURCE_DIR
+message(NOTICE "PROJECT_TOP_DIR == " ${PROJECT_TOP_DIR})
+message(NOTICE "PicJsonTrans MyParent_DIR == " ${MyParent_DIR})
+message(NOTICE "PicJsonTrans CMAKE_CURRENT_SOURCE_DIR == " ${CMAKE_CURRENT_SOURCE_DIR})
 
+include_directories(${MyParent_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(${PROJECT_CINCLUDE})
 include_directories(${PROJECT_ThridParty})
 include_directories(${PROJECT_ThridParty}/nlohmann-json)
 include_directories(${PROJECT_OpenCv_Dir})
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -30,9 +40,7 @@ ${File_Include}
 ${SUB_FILES}
 )
 
-message(NOTICE "PROJECT_TOP_DIR == " ${PROJECT_TOP_DIR})
-message(NOTICE "CMAKE_CURRENT_SOURCE_DIR == " ${CMAKE_CURRENT_SOURCE_DIR})
-#CMAKE_CURRENT_SOURCE_DIR
+
 
 include_directories(${PROJECT_TOP_DIR}/src/basicFun)
 target_link_libraries(PicJsonTrans BasicFun)
