@@ -11,6 +11,62 @@
 
 namespace nsPicJsonTrans {
 
+    nlohmann::json TestOnePicJson(int hang,int lie,std::string strText)
+    {
+        using json = nlohmann::json;
+        json j;
+
+        if (hang <= 0) {
+            hang = 1;
+        }
+
+        // 添加数字  
+        j["number"] = hang;
+
+        // 添加字符串  
+        j["Text"] = strText;
+
+        // 添加一个数组，并在其中添加元素  
+        
+        json ToparrayPart;
+        for (int row = 0; row < hang; row++) {
+            json AraryHang;
+            AraryHang.clear();
+            for (int col = 0; col < lie; col++) {
+                json arraryLie;
+                arraryLie.clear();
+
+                json ArrayThrid_BGR;
+                ArrayThrid_BGR.clear();
+
+                ArrayThrid_BGR.push_back(hang + 10 * row + col + 1);
+                ArrayThrid_BGR.push_back(hang + 10 * row + col + 2);
+                ArrayThrid_BGR.push_back(hang + 10 * row + col + 3);
+                arraryLie["BGR"] = ArrayThrid_BGR;
+                //arraryLie.push_back(ArrayThrid_BGR);
+
+                AraryHang.push_back(arraryLie);
+            }
+
+
+            ToparrayPart.push_back(AraryHang);
+        }
+
+
+        
+        //arrayPart.push_back("element1");
+        //ToparrayPart.push_back(number+100);
+        //ToparrayPart.push_back(number + 101);
+        //ToparrayPart.push_back(number + 102);
+        //ToparrayPart.push_back(ArarySecond);
+
+
+
+        //arrayPart.push_back(true);  // JSON中也可以包含布尔值  
+        j["array"] = ToparrayPart;
+        return j;
+    }
+
     void TestJson() {
         std::cout << "TestJson" << std::endl;
         std::cout << "" << std::endl;
@@ -27,19 +83,25 @@ namespace nsPicJsonTrans {
 
         // 添加一个数组，并在其中添加元素  
         json arrayPart;
-        arrayPart.push_back("element1");
+        //arrayPart.push_back("element1");
         arrayPart.push_back(456);
-        arrayPart.push_back(true);  // JSON中也可以包含布尔值  
+        arrayPart.push_back(789);
+        arrayPart.push_back(123);
+        //arrayPart.push_back(true);  // JSON中也可以包含布尔值  
         j["array"] = arrayPart;
 
         // 你可以继续添加更多的键值对和数组...  
         json jTop;
         json jTopArray;
-        jTopArray.push_back(j);
+        json pic1 = TestOnePicJson(1,2,"hello");
+        json pic2 = TestOnePicJson(2, 3,"test");
+        jTopArray.push_back(pic1);
+        jTopArray.push_back(pic2);
         jTop["picList"] = jTopArray;
 
         // 输出json到控制台  
         std::cout << jTop.dump(4) << std::endl;  // 4是缩进级别，用于格式化输出
+        int kkkl = 412;
     }
 
     void TestCv()

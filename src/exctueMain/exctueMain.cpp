@@ -114,8 +114,95 @@ void recursiveDirectoryTraversal(const std::filesystem::path& path) {
 	}
 }
 
-int main() { 
 
+using json = nlohmann::json;
+
+// 定义 BGR 结构体
+struct BGR {
+	int b;
+	int g;
+	int r;
+};
+
+// 定义 PicItem 结构体
+struct PicItem {
+	std::string Text;
+	std::vector<std::vector<BGR>> array;
+	int number;
+};
+
+// 定义从 JSON 到 BGR 结构体的转换
+void from_json(const json& j, BGR& bgr) {
+	bgr.b = j.at("BGR").at(0);
+	bgr.g = j.at("BGR").at(1);
+	bgr.r = j.at("BGR").at(2);
+}
+
+// 定义从 JSON 到 PicItem 结构体的转换
+void from_json(const json& j, PicItem& p) {
+	j.at("Text").get_to(p.Text);
+	j.at("number").get_to(p.number);
+
+	const json& jsonArray = j.at("array");
+	for (const auto& row : jsonArray) {
+		std::vector<BGR> rowVector;
+		for (const auto& bgrObj : row) {
+			BGR bgr;
+			from_json(bgrObj, bgr);
+			rowVector.push_back(bgr);
+		}
+		p.array.push_back(rowVector);
+	}
+}
+
+
+void ReadTestJieXiJson()
+{
+	std::ifstream file("C:\\test\\jsonTest.json");
+	if (!file.is_open()) {
+		std::cerr << "Failed to open file." << std::endl;
+		return;
+	}
+
+	// 解析 JSON 数据
+	json j;
+	file >> j;
+
+	// 检查 picList 是否存在
+	if (j.contains("picList")) {
+		const json& picList = j.at("picList");
+
+		// 将 picList 转换为 vector<PicItem>
+		std::vector<PicItem> picItems;
+		for (const auto& item : picList) {
+			PicItem picItem;
+			from_json(item, picItem);
+			picItems.push_back(picItem);
+		}
+
+		// 输出结果
+		for (const auto& picItem : picItems) {
+			std::cout << "Text: " << picItem.Text << std::endl;
+			std::cout << "Array: " << std::endl;
+			for (const auto& row : picItem.array) {
+				for (const auto& bgr : row) {
+					std::cout << "BGR: [" << bgr.b << ", " << bgr.g << ", " << bgr.r << "] ";
+				}
+				std::cout << std::endl;
+			}
+			std::cout << "Number: " << picItem.number << std::endl;
+			std::cout << "----------------------" << std::endl;
+		}
+	}
+	else {
+		std::cerr << "Key 'picList' does not exist in the JSON object." << std::endl;
+	}
+
+	std::cout << "TestJieXi Json End" << std::endl;
+}
+
+int main() { 
+	ReadTestJieXiJson();
 	
 
 	char buffer[MAX_PATH];
